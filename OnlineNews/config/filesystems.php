@@ -55,7 +55,9 @@ return [
         ],
 
         's3' => [
-            'driver' => 's3',
+            'driver' => 'local',
+            'root' => storage_path('app/public'),
+            //'root' => storage_path('app/public/galaries'),
             'key' => 'your-key',
             'secret' => 'your-secret',
             'region' => 'your-region',
