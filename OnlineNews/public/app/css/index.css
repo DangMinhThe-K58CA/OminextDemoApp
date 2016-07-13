@@ -1,0 +1,68 @@
+#headerField {
+	background-color: #33cc33;
+}
+#bodyField {
+	margin-top: 0.5%;
+	background-color: white;
+	margin-bottom: 1%;
+	margin-left: 5%;
+}
+#catesField {
+	background-color: #33cc00;
+	border-radius: 5px;
+}
+#mainContent {
+	padding: 0px;
+	background-color: white;
+}
+#detailCategories {
+}
+*.titileContent {
+	padding-top: 2%;
+	background-color: #79ff4d;
+	border-radius: 5px;
+	font-size: 200%;
+	text-align: center;
+}
+*.detailCate {
+	background-color: #d9ffcc;
+	border:2px solid white;
+}
+#rightNav {
+	padding: 0px;
+}
+#rightNavImg {
+	padding: 0px;
+	height: 480px;
+}
+#footerField {
+	background-color: #d1e0e0;
+}
+*.categoryList {
+	font-size: 95%;
+	font-weight: 525;
+	margin-top: 10%;
+	border-bottom:1px solid #79ff4d;
+
+}
+#newsField {
+	
+}
+a:link {
+    color: #000080;
+}
+
+/* visited link */
+a:visited {
+    color: #ffa31a;
+}
+
+/* mouse over link */
+a:hover {
+    color: #ffa31a;
+}
+
+/* selected link */
+a:active {
+    color: #ffa31a;
+}

@@ -20,8 +20,153 @@ use DB;
 
 use Hash;
 
+use App\Fileentry;
+ 
+use Illuminate\Support\Facades\Storage;
+
+use Illuminate\Support\Facades\File;
+
+use Illuminate\Http\Response;
+
+
 class AdminController extends Controller
 {
+	
+	public function checkRole() {
+		if(Auth::check()) {
+				if (Auth::user()->admin == 2) {
+					return 1;
+				}
+				else {
+					return 0;
+				}
+			}
+			else {
+					return 0;
+				}
+	}
+
+	public function changeRole(Request $request) {
+		if ($this->checkRole()) {
+			$userId = $request->input('userId');
+			$newRole = $request->input('newRole');
+			$changed = DB::table('users')->where('id', '=', $userId)->update(['admin' => $newRole]);
+			echo $changed;
+		}
+		else {
+			return Redirect::to('/');
+		}
+	}
+
+	public function changeAdminInfo(Request $request) {
+		if ($this->checkRole()) {
+			$tmpAdmin = new User();
+			$tmpAdmin->name = $request->input('name');
+			$tmpAdmin->sortDescription = $request->input('sortDescription');
+			$tmpAdmin->homeTown = $request->input('homeTown');
+			$tmpAdmin->dateOfBirth = $request->input('dateOfBirth');
+			$tmpAdmin->phone = $request->input('phone');
+			if ($tmpAdmin->name != "") {
+				DB::table('users')->where('id', Auth::user()->id)->update(['name' => $tmpAdmin->name]);
+			}
+			if ($tmpAdmin->sortDescription != Auth::user()->sortDescription) {
+				DB::table('users')->where('id', Auth::user()->id)->update(['sortDescription' => $tmpAdmin->sortDescription]);
+			}
+			if ($tmpAdmin->homeTown != "") {
+				DB::table('users')->where('id', Auth::user()->id)->update(['homeTown' => $tmpAdmin->homeTown]);
+			}
+			if ($tmpAdmin->dateOfBirth != "") {
+				DB::table('users')->where('id', Auth::user()->id)->update(['dateOfBirth' => $tmpAdmin->dateOfBirth]);
+			}
+			if ($tmpAdmin->phone != "") {
+				DB::table('users')->where('id', Auth::user()->id)->update(['phone' => $tmpAdmin->phone]);
+			}
+			return redirect('/yourProfile')->with('success', 'Thay đổi thông tin thành công !');
+		}
+		else {
+			return Redirect::to('/');
+		}
+	}
+
+	public function changeAdminPassword(Request $request) {
+		if ($this->checkRole()) {
+			$curPas = $request->input('currentPassword');
+			if (Hash::check($curPas, Auth::user()->password)) {
+				$newPassword = Hash::make($request->input('newPassword'));
+				if ($newPassword != Auth::user()->password) {
+					DB::table('users')->where('id', Auth::user()->id)->update(['password' => $newPassword]);
+					return Redirect::to('/adminLogout');
+				}
+			}
+			else {
+				return redirect('/yourProfile')->with('error', 'Vui lòng nhập đúng mật khẩu hiện tại !');
+			}
+		}
+		else {
+			return Redirect::to('/');
+		}
+		
+	}
+
+	public function showAdminProfile() {
+		if ($this->checkRole()) {
+			$img = DB::table('fileentries')->where('id', '=', Auth::user()->imageId)->get();
+			if (sizeof($img) != 0) {
+				$img = $img[0];
+				if (Storage::disk('s3')->has($img->filename)) {
+					$imgData = base64_encode(Storage::disk('s3')->get($img->filename));
+					return view('admin/adminProfile', ['imgData' => $imgData]);
+				}
+				else {
+					return view('admin/adminProfile', ['imgData', ""]);
+				}
+			}
+		}
+		else {
+			return redirect('/adminLogin')->with('error', 'Vui lòng đăng nhập bằng tài khoản quản trị viên !');
+		}
+	}
+
+	public function showAdminsList() {
+		if ($this->checkRole()) {
+			$adminsList = DB::table('users')->where('admin', '=', 2)->paginate(6);
+			return view('admin/adminsList', ['admins' => $adminsList]);
+		}
+		else {
+			return Redirect::to('/');
+		}
+	}
+
+	public function showPartnersList() {
+		if ($this->checkRole()) {
+			$partnersList = DB::table('users')->where('admin', '=', 1)->paginate(6);
+			return view('admin/partnersList', ['partners' => $partnersList]);
+		}
+		else {
+			return Redirect::to('/');
+		}
+	}
+
+	public function showViewersList() {
+		if ($this->checkRole()) {
+			$viewersList = DB::table('users')->where('admin', '=', 0)->paginate(6);
+			return view('admin/viewersList', ['viewers' => $viewersList]);
+		}
+		else {
+			return Redirect::to('/');
+		}
+	}
+
+	public function index() {
+		if ($this->checkRole()) {
+			return view('admin/adminHomePage');
+		}
+		elseif (Auth::user()->admin == 1) {
+			return Redirect::to('/cong-tac-vien');
+		} 
+		
+	}
+
 	public function startRegister() {
 		$error = "";
 		$data = array(
@@ -51,7 +196,7 @@ class AdminController extends Controller
 			$newAdmin = new User();
 			$newAdmin->name = $request->input('name');
 			$newAdmin->email = $request->input('email');
-			$newAdmin->password = bcrypt($request->input('password'));
+			$newAdmin->password = Hash::make($request->input('password'));
 			$counter = sizeof(DB::table('users')->where('email','=', $newAdmin->email)->get());
 			if ($counter != 0) {
 				$error = "Email account existed !!!";
@@ -68,51 +213,51 @@ class AdminController extends Controller
 			        // redirect them to the secure section or whatever
 			        // return Redirect::to('secure');
 			        // for now we'll just echo success (even though echoing in a controller is bad)
-			        return Redirect::to('/show');
+			        return Redirect::to('/');
 
 			    }
 			}
 		}
-		
 	}
 	public function loginProcessing(Request $request) {
-		$rules = array(
-		    'email'    => 'required|email', // make sure the email is an actual email
-		    'password' => 'required|alphaNum|min:4' // password can only be alphanumeric and has to be greater than 3 characters
-		);
-
-		// run the validation rules on the inputs from the form
-		$validator = Validator::make(Input::all(), $rules);
-
-		// if the validator fails, redirect back to the form
-		if ($validator->fails()) {
-		    return Redirect::to('login')
-		        ->withErrors($validator) // send back all errors to the login form
-		        ->withInput(Input::except('password')); // send back the input (not the password) so that we can repopulate the form
-		} else {
-			$userdata = array(
+		if (sizeof($request->input()) == 0) {
+			return Redirect::to('/adminLogin');
+		}
+		$userdata = array(
 		        'email'     => $request->input('email'),
 		        'password'  => $request->input('password')
 	    	);
-	    	if (Auth::attempt($userdata)) {
+    	if (Auth::attempt($userdata)) {
 
-		        // validation successful!
-		        // redirect them to the secure section or whatever
-		        // return Redirect::to('secure');
-		        // for now we'll just echo success (even though echoing in a controller is bad)
-		        return Redirect::to('/show');
+	        // validation successful!
+	        // redirect them to the secure section or whatever
+	        // return Redirect::to('secure');
+	        // for now we'll just echo success (even though echoing in a controller is bad)
+	        if (Auth::user()->admin == 2) {
+	        	return Redirect::to('/quan-tri');
+	        }
+	        elseif (Auth::user()->admin == 1) {
+	        	return Redirect::to('/cong-tac-vien');
+	        }
+	        else {
+		        return Redirect::to('/');
+	        }
 
-		    } else {
+	    } else {
 
-		        // validation not successful, send back to form 
-		        return Redirect::to('login');
+	        // validation not successful, send back to form 
+	        return redirect('/adminLogin')->with('error', 'Email hoặc mật khẩu đăng nhập không đúng !');
 
-		    }
-		}
+	    }
 	}
     //
     public function logoutProcessing() {
-    	Auth::logout();
-    	return Redirect::to('login');
+    	if ($this->checkRole()) {
+	    	Auth::logout();
+	    	return redirect('/adminLogin')->with('error', 'Vui lòng nhập lại !');
+	    }
+	    else {
+	    	return Redirect::to('/adminLogin');
+	    }
     }
 }
