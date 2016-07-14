@@ -21,6 +21,8 @@ use DB;
 use Hash;
 
 use App\Fileentry;
+
+use App\News;
  
 use Illuminate\Support\Facades\Storage;
 
@@ -31,11 +33,6 @@ use Illuminate\Http\Response;
 
 class PartnerController extends Controller
 {
-	public function saveNewsContent(Request $request) {
-		$content = $request->input('editor');
-		print_r($content);
-	}
-	
 	public function checkRole() {
 		if(Auth::check()) {
 				if (Auth::user()->admin == 1) {
@@ -50,6 +47,18 @@ class PartnerController extends Controller
 				}
 	}
 
+	public function saveNewsContent(Request $request) {
+		if ($this->checkRole()) {
+			//$news = new News();
+			//$newscontent = $request->input('newsContent');
+			var_dump($request->input('_token'));
+		} else {
+			return redirect('/');
+		}
+		
+	}
+	
+	
 	public function index() {
 		if ($this->checkRole()) {
 				return view('partner/index');
