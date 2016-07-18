@@ -49,9 +49,48 @@ class PartnerController extends Controller
 
 	public function saveNewsContent(Request $request) {
 		if ($this->checkRole()) {
-			//$news = new News();
-			//$newscontent = $request->input('newsContent');
-			var_dump($request->input('_token'));
+			$title = $request->input('newsTitle');
+			$tmpList = DB::table('newss')->where('title','=', $title)->select('id')->get();
+			if (sizeof($tmpList) == 0) {
+				$news = new News();
+				$news->cateId = $request->input('cateId');
+				$news->authId = Auth::user()->id;
+				$news->title = $request->input('newsTitle');
+				$news->shortDescription = $request->input('shortDescription');
+				$news->content = $request->input('content');
+				$added = $news->save();
+				$maxId = DB::table('newss')->max('id');
+				$newId = $maxId;
+				$tmpContent = $news->content;
+				$firstImageTag = strpos($tmpContent, "<img");
+				//
+				$firstImgString = substr($tmpContent, $firstImageTag);
+				$firstImageEndTag = strpos($firstImgString, "/>");
+				$firstImgString = substr($firstImgString,0, $firstImageEndTag + 2);
+				//
+				$firstSrcTag = strpos($tmpContent, "src=");
+				//
+				$firstImgString = substr($tmpContent, $firstSrcTag + 5);
+				$firstSrcPp = strpos($firstImgString, "\"");
+				$firstImgString = substr($firstImgString, 0, $firstSrcPp);
+				//
+				$img = strrev($firstImgString);
+				$firstSignal = strpos($img, '/');
+				$img = strrev(substr($img, 0, $firstSignal));
+				//
+				DB::table('images')->insert([
+						'name' => $img
+					]);
+				$imageId = DB::table('images')->max('id');
+				DB::table('newsimages')->insert([
+						'newsId' => $newId,
+						'imageId' => $imageId
+					]);
+				echo $added;
+			} else {
+				echo "Tiêu đề trùng ! Vui lòng chọn tiêu đề khác.";
+			}
+			
 		} else {
 			return redirect('/');
 		}

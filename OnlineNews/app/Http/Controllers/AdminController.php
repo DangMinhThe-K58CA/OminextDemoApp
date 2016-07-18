@@ -45,7 +45,26 @@ class AdminController extends Controller
 					return 0;
 				}
 	}
-
+	public function changeNewsActive (Request $request) {
+		if ($this->checkRole()) {
+			$newsId = $request->input('newsId');
+			$newsActive = $request->input('newsActive');
+			$updated = DB::table('newss')->where('id', '=', $newsId)->update(['active'=>$newsActive]);
+			echo $updated;
+		}
+		else {
+			return Redirect::to('/');
+		}
+	}
+	public function newssListManage(Request $request) {
+		if ($this->checkRole()) {
+			$newssList = DB::table('newss')->join('users', 'newss.authId', '=', 'users.id')->join('categories', 'newss.cateId', '=', 'categories.id')->select('newss.*', 'users.name', 'users.email', 'categories.name as cateName')->orderBy('active', 'asc')->orderBy('created_at', 'desc')->paginate(6);
+			return view('admin/newssList', ['newssList' => $newssList]);
+		}
+		else {
+			return Redirect::to('/');
+		}
+	}
 	public function changeRole(Request $request) {
 		if ($this->checkRole()) {
 			$userId = $request->input('userId');

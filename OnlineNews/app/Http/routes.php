@@ -105,6 +105,10 @@ Route::post('changeAdminInfo', 'AdminController@changeAdminInfo');
 Route::post('changeAdminPassword', 'AdminController@changeAdminPassword');
 
 Route::get('/changeRole', 'AdminController@changeRole');
+
+Route::get('/newssListManage', 'AdminController@newssListManage');
+
+Route::get('/changeNewsActive', 'AdminController@changeNewsActive');
 //end of admin routes.
 
 //partner routes:

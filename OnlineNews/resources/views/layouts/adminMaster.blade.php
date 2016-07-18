@@ -78,6 +78,9 @@ $img = DB::table('fileentries')->where('id', '=', Auth::user()->imageId)->get();
             -moz-border-radius: 6px 0 6px 6px;
             border-radius: 6px 0 6px 6px;
         }
+        a.business, a.header {
+            font-size:100%;
+        }
     </style>
 <body>
     <div class="col-sm-12">
@@ -93,8 +96,8 @@ $img = DB::table('fileentries')->where('id', '=', Auth::user()->imageId)->get();
                                    <img class="img-circle" alt="Cinque Terre" src= "data:image/jpeg;base64,{{$imgData}}" width="40px" height="40px">{{' '. Auth::user()->name . ' '}}<span class="caret"></span>
                                 </a>
                                 <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
-                                    <li><a href="#" onclick = "window.location.href = '/yourProfile'"><i class="fa fa-info-circle" style="font-size:20px;color:green;"></i>   Thông tin</a></li>
-                                    <li><a href="#" onclick = "window.location.href = '/adminLogout'"><i class="fa fa-sign-out" style="font-size:20px;color:red;"></i>   Đăng xuất</a></li>
+                                    <li><a class="header" href="#" onclick = "window.location.href = '/yourProfile'"><i class="fa fa-info-circle" style="font-size:20px;color:green;"></i>   Thông tin</a></li>
+                                    <li><a class="header" href="#" onclick = "window.location.href = '/adminLogout'"><i class="fa fa-sign-out" style="font-size:20px;color:red;"></i>   Đăng xuất</a></li>
                                     <li class="divider"></li>
                                 </ul>
                             </div>
@@ -111,11 +114,10 @@ $img = DB::table('fileentries')->where('id', '=', Auth::user()->imageId)->get();
                     <a id="dLabel" role="button" data-toggle="dropdown" class="btn btn-primary" data-target="#" href="/page.html" style="font-size:120%;">----  Chọn tác vụ  ----<span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
-                        <li><a href="#" onclick="window.location.href = 'showAdminsList'">Danh sách quản trị viên</a></li>
-                        <li><a href="#" onclick="window.location.href = 'showPartnersList'">Danh sách cộng tác viên</a></li>
-                        <li><a href="#" onclick="window.location.href = 'showViewersList'">Danh sách độc giả</a></li>
-                        <li><a href="#">Some action</a></li>
-                        <li><a href="#">Some other action</a></li>
+                        <li><a href="#" class="business" onclick="window.location.href = 'newssListManage'">Quản lý bài đăng</a></li>
+                        <li><a href="#" class="business" onclick="window.location.href = 'showAdminsList'">Danh sách quản trị viên</a></li>
+                        <li><a href="#" class="business" onclick="window.location.href = 'showPartnersList'">Danh sách cộng tác viên</a></li>
+                        <li><a href="#" class="business" onclick="window.location.href = 'showViewersList'">Danh sách độc giả</a></li>
                         <li class="divider"></li>
                     </ul>
                 </div>

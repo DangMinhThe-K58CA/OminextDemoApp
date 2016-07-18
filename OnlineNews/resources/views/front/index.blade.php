@@ -151,17 +151,17 @@ if (Auth::check()) {
 								<p style = "font-weight:Bold; font-size:150%; color:#000099;" ng-bind = "news.title"></p>
 							</div>
 						</div>
-						<div class="col-sm-10 col-sm-offset-1">
+						<!-- <div class="col-sm-10 col-sm-offset-1">
 							<div class="col-sm-10 col-sm-offset-1" align="center">
-								<img ng-src="app/images/{$news.imagesList[0].name$}" width="80%" height="80%" style="padding-bottom: 5%;"></img>
+								<img ng-src="templateEditor/kcfinder/upload/images/{$news.imagesList[0].name$}" width="80%" height="80%" style="padding-bottom: 5%;"></img>
 							</div>
 						</div>
 						<div class="col-sm-12 col-sm-offset-1" align="center" id = "description">
 							<p style = "color:#991f00"><i>Ảnh minh họa: {$ news.shortDescription $}</i></p>
+						</div> -->
+						<div class="col-sm-12 col-sm-offset-right-0" id = "newsContent">
 						</div>
-						<div class="col-sm-12 col-sm-offset-right-1" id = "newsContent">
-						</div>
-						<div class="col-sm-12 col-sm-offset-right-1" align="right">
+						<div class="col-sm-12 col-sm-offset-right-0" align="right">
 							<p ng-bind = "news.Date" style="font-style: italic;color: #990000;"></p>
 							<p style="font-style: italic;color: #0000b3;">( Theo TinVit.com )</p>
 						</div>
@@ -224,12 +224,12 @@ if (Auth::check()) {
 									</div>
 								</div>
 								<div class="col-sm-12">
-									<div class="col-sm-3">
+									<div class="col-sm-2">
 										<a>
-											<img ng-src="app/images/{$news.imagesList[0].name $}" width="80px" height="90px" style="padding-bottom: 10%;"></img>
+											<img ng-src="templateEditor/kcfinder/upload/images/{$news.imagesList[0].name $}" width="80px" height="90px" style="padding-bottom: 10%;"></img>
 										</a>
 									</div>
-									<div class="col-sm-8 col-sm-offset-1">
+									<div class="col-sm-9 col-sm-offset-1">
 										<p style="font-size: 85%" ng-bind = "news.shortDescription"></p>
 										<div class="col-sm-12 col-sm-offset-right-1" align="right">
 											<p ng-bind = "news.updated_at" style="font-style: italic;color: #990000;font-size: 75%;"></p>
@@ -270,12 +270,12 @@ if (Auth::check()) {
 										</div>
 									</div>
 									<div class="col-sm-12">
-										<div class="col-sm-3">
+										<div class="col-sm-2">
 											<a>
-												<img ng-src="app/images/{$news.imagesList[0].name $}" width="80px" height="90px" style="padding-bottom: 10%;"></img>
+												<img ng-src="/templateEditor/kcfinder/upload/images/{$news.imagesList[0].name $}" width="80px" height="90px" style="padding-bottom: 10%;"></img>
 											</a>
 										</div>
-										<div class="col-sm-8 col-sm-offset-1">
+										<div class="col-sm-9 col-sm-offset-1">
 											<p style="font-size: 85%" ng-bind = "news.shortDescription"></p>
 											<div class="col-sm-12 col-sm-offset-right-1" align="right">
 												<p ng-bind = "news.updated_at" style="font-style: italic;color: #990000;font-size: 75%;"></p>
@@ -285,7 +285,7 @@ if (Auth::check()) {
 								</div>
 								<div ng-if = "news.order == 6">
 									<a href="http://marvel.com/movies/movie/219/captain_america_civil_war" target="_blank">
-										<img src= "/app/images/film.gif" alt="film.gif" width="100%" height="200px" style="margin-top: 1%;margin-bottom: 1%;padding: 0;">
+										<img src= "templateEditor/kcfinder/upload/images/film.gif" alt="film.gif" width="100%" height="200px" style="margin-top: 1%;margin-bottom: 1%;padding: 0;">
 									</a>
 								</div>
 							</div>

@@ -12,7 +12,7 @@
 @section('content')
 	<div class="col-sm-12">
 	  <script src="/templateEditor/ckeditor/ckeditor.js"></script>
-	  	<form method="POST" action="/saveNewsContent" class="smart-form" novalidate="novalidate" id="newsMakingForm">
+	  	<form method="POST" action="" class="smart-form" novalidate="novalidate" id="newsMakingForm">
 	  		{{ csrf_field() }}
 	  		<section>
 	  			<label class="label">Tiêu đề</label>
@@ -54,83 +54,109 @@
 		  	</section>
 		  	<footer>
 		  		<input type = "button" class="btn btn-danger" value="Hủy" onclick = "cancelMakingNews();"/>
-		  		<input type = "button" class="btn btn-primary" onclick="completeAddingNews();" value = "Hoàn tất">
+		  		<input type = "submit" class="btn btn-primary" onclick="completeAddingNews();" value = "Hoàn tất" id = "submitBtn">
 	  		</footer>
   		</form>
 		  <script type="text/javascript">  
 		      CKEDITOR.replace( 'editor1' );
-
+		      	$('#submitBtn').click(function (event) {
+		      		event.preventDefault();
+		      	});
 				//
+				function CKupdate(){
+				    for ( instance in CKEDITOR.instances )
+				        CKEDITOR.instances[instance].updateElement();
+				}
 				function completeAddingNews() {
-		            var token, title, cateId,description, content;
-		            token = $('input[name=_token]').val();
-		            title = $('#newsTitle').val();
-		            cateId = $('#cateId').val();
-		            description = $('#shortDescription').val();
-		            content = $('#newsContent').val();
-		            $.ajax({
-		                url: '/saveNewsContent',
-		                data: {_token: token, newsTitle: title, cateId: cateId, shortDescription: description, content: content},
-		                type: 'POST',
-		                success: function (resp) {
-		                    $.each(resp.subramos, function (key, value) {
-		                        $('#subramos').append('<option>'+ value.nombre_subramo +'</option>');
-		                    });
-		                }
-		            });
-			    }
+					//
+					      var formValidate = $("#newsMakingForm");
+					      formValidate.validate({
+					        // Rules for form validation
+					        rules : {
+					        newsTitle : {
+					          required : true,
+					          minlength: 5,
+					          maxlength: 200,
+					        },
+					        shortDescription : {
+					          required : true,
+					          minlength: 5,
+					          maxlength: 1000,
+					        },
+					        newsContent : {
+					        	required: true,
+					        	minlength: 5,
+					        	maxlength: 10000,
+					        },
+					      },
+
+					      // Messages for form validation
+					      messages : {
+					        newsTitle : {
+					          required: 'Vui lòng nhập tiêu đề !',
+					          minlength : 'Tiêu đề chứa ít nhất 5 kí tự !',
+					          maxlength : 'Tiêu đề chứa không quá 200 kí tự !'
+					        },
+					        shortDescription : {
+					          required: 'Vui lòng nhập mô tả !',
+					          minlength : 'Mô tả chứa ít nhất 5 kí tự !',
+					          maxlength : 'Mô tả chứa không quá 1000 kí tự !'
+					        },
+					        newsContent : {
+					          required: 'Vui lòng nhập mô tả !',
+					          minlength : 'Nội dung chứa ít nhất 5 kí tự !',
+					          maxlength : 'Nội dung chứa không quá 10000 kí tự !'
+					        },
+					      },
+
+					        // Do not change code below
+					        errorPlacement : function(error, element) {
+					          error.insertAfter(element.parent());
+
+					        },
+					        invalidHandler: function(event, formValidate) {
+					        	// alert(formValidate.numberOfInvalids());
+					        	return null;
+					        },
+
+					    });
+					      
+					//
+					if (formValidate.valid()) {
+						var token, title, cateId,description, content;
+			            token = $('input[name=_token]').val();
+			            title = $('#newsTitle').val();
+			            cateId = 1;
+			            description = $('#shortDescription').val();
+			            for ( instance in CKEDITOR.instances ) {
+				        	CKEDITOR.instances[instance].updateElement();
+			            }
+			            content = CKEDITOR.instances.editor1.getData();
+			            $.ajax({
+			                url: '/saveNewsContent',
+			                data: {_token: token, newsTitle: title, cateId: cateId, shortDescription: description, content: content},
+			                type: 'POST',
+			                success: function (data) {
+			                   if (data == "1") {
+			                   		alert('Tin đã đăng thành công !');
+			                   		window.location.href = "/showNewsListOfPartner";
+			                   }
+			                   else {
+			                   	alert(data);
+			                   }
+			                }
+			            });
+				    }
+				}
+		            
+			    //
+			    function cancelMakingNews() {
+			      	CKEDITOR.instances.editor1.setData('');
+			      	$('#newsTitle').val("");
+			      	$('#shortDescription').val("");
+			      }
 		      	// 
-		       $(function() {
-		      var formValidate = $("#newsMakingForm").validate({
-		        // Rules for form validation
-		        rules : {
-		        newsTitle : {
-		          required : true,
-		          minlength: 5,
-		          maxlength: 200,
-		        },
-		        shortDescription : {
-		          required : true,
-		          minlength: 5,
-		          maxlength: 1000,
-		        },
-		        newsContent : {
-		        	required: true,
-		        	minlength: 5,
-		        	maxlength: 10000,
-		        },
-		      },
-
-		      // Messages for form validation
-		      messages : {
-		        newsTitle : {
-		          required: 'Vui lòng nhập tiêu đề !',
-		          minlength : 'Tiêu đề chứa ít nhất 5 kí tự !',
-		          maxlength : 'Tiêu đề chứa không quá 200 kí tự !'
-		        },
-		        shortDescription : {
-		          required: 'Vui lòng nhập mô tả !',
-		          minlength : 'Mô tả chứa ít nhất 5 kí tự !',
-		          maxlength : 'Mô tả chứa không quá 1000 kí tự !'
-		        },
-		        newsContent : {
-		          required: 'Vui lòng nhập mô tả !',
-		          minlength : 'Nội dung chứa ít nhất 5 kí tự !',
-		          maxlength : 'Nội dung chứa không quá 10000 kí tự !'
-		        },
-		      },
-
-		        // Do not change code below
-		        errorPlacement : function(error, element) {
-		          error.insertAfter(element.parent());
-		        }
-		      });
-		    });
-		      function cancelMakingNews() {
-		      	CKEDITOR.instances.editor1.setData('');
-		      	$('#newsTitle').val("");
-		      	$('#shortDescription').val("");
-		      }
+		      
 		  </script>
 	</div>
 @endsection

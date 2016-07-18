@@ -67,14 +67,14 @@
 				</div>
 				
 			</div>
-			<div class="col-sm-10 col-sm-offset-1">
+			<!-- <div class="col-sm-10 col-sm-offset-1">
 			</div>
 			<div class="col-sm-12 col-sm-offset-1" align="center" id = 'description'>
 				<p style = "color:#991f00"><i>Ảnh minh họa: {$ news.shortDescription $}</i></p>
+			</div> -->
+			<div class="col-sm-12 col-sm-offset-right-0" id = "newsContent">
 			</div>
-			<div class="col-sm-12 col-sm-offset-right-1" id = "newsContent">
-			</div>
-			<div class="col-sm-12 col-sm-offset-right-1" align="right">
+			<div class="col-sm-12 col-sm-offset-right-0" align="right">
 				<p ng-bind = "news.Date" style="font-style: italic;color: #990000;"></p>
 				<p style="font-style: italic;color: #0000b3;">( Theo TinVit.com )</p>
 			</div>

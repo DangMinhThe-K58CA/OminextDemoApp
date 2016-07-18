@@ -67,6 +67,7 @@ app.controller("hottestNewsController", ['$scope', '$rootScope', 'appService',fu
 				$scope.hottestList = JSON.parse(jsonData);
 				for(var i = 0; i < $scope.hottestList.length; i ++) {
 					$scope.hottestList[i].order = i + 1;
+					$scope.hottestList[i].shortDescription = $scope.hottestList[i].shortDescription.slice(0,200) + " ...";
 				}
 				$scope.$applyAsync();
 			}
@@ -106,6 +107,7 @@ app.controller("newsOfCateController", ['$scope','$rootScope', 'appService', fun
 				//alert(JSON.stringify($scope.curCateNews.newsList[i].imagesList[0]));
 				//alert($scope.curCateNews.newsList[i].imagesList[0].name);
 				$scope.curCateNews.newsList[i].order = i + 1;
+				$scope.curCateNews.newsList[i].shortDescription = $scope.curCateNews.newsList[i].shortDescription.slice(0,200) + " ...";
 				if (i == ($scope.numOfNewsInEachPage - 1)) {
 					$scope.pageIndexsList[0] = 1;
 				}

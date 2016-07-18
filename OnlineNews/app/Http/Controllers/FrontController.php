@@ -63,7 +63,7 @@ class FrontController extends Controller
     //
     public function getNewsOfCate(Request $request) {
     	$cateId = $request->input('jsonData');
-    	$newss = DB::table('newss')->where('cateId', '=', $cateId)->orderBy('updated_at', 'desc')->get();
+    	$newss = DB::table('newss')->where('cateId', '=', $cateId)->where('active', '=', 1)->orderBy('updated_at', 'desc')->get();
     	//$newssList = (array) new News();
     	for ($i = 0; $i < sizeof($newss); $i ++) {
     		# code...
@@ -85,7 +85,7 @@ class FrontController extends Controller
     }
     //
     public function getHottestList(Request $request) {
-    	$newss = DB::table('newss')->orderBy('updated_at', 'desc')->take(12)->get();
+    	$newss = DB::table('newss')->orderBy('updated_at', 'desc')->where('active', '=', 1)->take(12)->get();
     	//$newssList = (array) new News();
     	for ($i = 0; $i < sizeof($newss); $i ++) {
     		# code...
