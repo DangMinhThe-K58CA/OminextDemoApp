@@ -31,6 +31,8 @@ Route::get('/general/getCategoryWithBookmarkData', 'GeneralUserController@getCat
 Route::get('/general/readNewsInBookmark', 'GeneralUserController@readNewsInBookmark');
 
 Route::get('/general/deleteNewsFromBookmark', 'GeneralUserController@deleteNewsFromBookmark');
+
+Route::get('/general/getHottestBookmarkList', 'GeneralUserController@getHottestBookmarkList');
 // end of routes
 
 
@@ -47,6 +49,8 @@ Route::get('/front/getNewsOfCate', 'FrontController@getNewsOfCate');
 Route::get('/front/getHottestList', 'FrontController@getHottestList');
 
 Route::get('/front/addToBookmark', 'FrontController@addToBookmark');
+
+
 //end of front routes.
 
 //Test routes:
@@ -55,7 +59,7 @@ Route::match(['get', 'post'],'/loginProcessing', 'ViewerController@loginProcessi
 
 Route::get('/register', 'ViewerController@startRegister');
 
-Route::post('/registerProcessing', 'GeneralUserController@registerProcessing');
+Route::post('/registerProcessing', 'ViewerController@registerProcessing');
 
 Route::get('/logout', 'ViewerController@logoutProcessing');
 //
@@ -123,9 +127,7 @@ Route::get('/cong-tac-vien', 'PartnerController@index');
 
 Route::get('/partnerProfile', 'PartnerController@showProfile');
 
-Route::get('/showNewsListOfPartner', function () {
-	return view('partner/newsList');
-});
+Route::get('/showNewsListOfPartner','PartnerController@newssListManage');
 
 Route::get('/makeNews', function () {
 	return view('partner/makeNews');
@@ -140,4 +142,10 @@ Route::post('changePartnerPassword', 'PartnerController@changePassword');
 Route::match(['get', 'post'],'/partnerLoginProcessing', 'PartnerController@loginProcessing');
 
 Route::get('/partnerLogout', 'PartnerController@logoutProcessing');
+
+Route::get('deleteNews', 'PartnerController@deleteNews');
+
+Route::get('editNews/{id}', 'PartnerController@editNews');
+
+Route::match(['get', 'post'],'completeEditingNews', 'PartnerController@completeEditingNews');
 //end of partner routes.

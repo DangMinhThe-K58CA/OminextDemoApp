@@ -50,6 +50,47 @@ class GeneralUserController extends Controller
 	// 		print_r($newUser);
 	// 	}
 	// }
+
+	public function getHottestBookmarkList(Request $request) {
+       if (Auth::check()) {
+			$catesList = DB::table('categories')->get();
+			$userId = Auth::user()->id;
+			$catesListWithBookmark = DB::table('bookmarks')->join('newss', 'bookmarks.newsId', '=', 'newss.id')->join('categories', 'newss.cateId', '=', 'categories.id')->where('bookmarks.userId', '=', $userId)->orderBy('bookmarks.state', 'asc')->orderBy('bookmarks.updated_at', 'desc')->select('bookmarks.*','newss.*', 'newss.id as newsId')->take(10)->get();			
+	    	// $bookmarksData = [];
+	    	// for ($i = 0; $i < sizeof($catesList); $i ++) {
+	    	// 	$cateData = [
+	    	// 		'cateId' => $catesList[$i]->id,
+	    	// 		'cateName' => $catesList[$i]->name,
+	    	// 		'bookmarks' => []
+	    	// 	];
+	    	// 	for ($j = 0; $j < sizeof($catesListWithBookmark); $j ++) {
+	    	// 		if ($catesList[$i]->id == $catesListWithBookmark[$j]->cateId) {
+	    	// 			array_push($cateData['bookmarks'], $catesListWithBookmark[$j]);
+	    	// 		}
+	    	// 	}
+	    	// 	array_push($bookmarksData, $cateData);
+	    	//}
+	    	for ($i = 0; $i < sizeof($catesListWithBookmark); $i ++) {
+	    		$news = $catesListWithBookmark[$i];
+	    		$imgsId = DB::table('newsImages')->where('newsId' , '=', $news->id)->get();
+	    		for ($j = 0; $j < sizeof($imgsId); $j ++) {
+	    			if ($j == 0) {
+	    				$news->imagesList = DB::table('images')->where('id' , '=', $imgsId[$j]->imageId)->select('name')->get();
+	    			}
+	    			else {
+	    				$tmpList = DB::table('images')->where('id' , '=', $imgsId[$j]->imageId)->select('name')->get();
+	    				array_push($news->imagesList, $tmpList['0']);
+	    			}
+	    		}
+	    	}
+	    	$jsonData = json_encode($catesListWithBookmark);
+	    	echo $jsonData;
+		}
+		else {
+			return redirect('/');
+		}
+    }
+
 	public function deleteNewsFromBookmark(Request $request) {
 		if (Auth::check()) {
 			$newsId = $request->input('newsId');

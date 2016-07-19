@@ -95,8 +95,10 @@
 			  	</tr>
 			  	<tr>
 			  		<td colspan="7" align="center">
-			  			<a href="javascript:void(0);" onclick = "showContent(this, {{$news->id}});"><i class="fa fa-arrows-v" style="font-size:14px;color:#476b6b;"></i> Hiển thị nội dung</a>
+			  			<a href="javascript:void(0);" class="showContentButton" id = "show{{$news->id}}" onclick = "showContent(this, {{$news->id}});"><i class="fa fa-arrows-v" style="font-size:14px;color:#476b6b;"></i> Hiển thị nội dung</a>
 			  			<input type="hidden" value = "<?php echo htmlspecialchars($news->content, ENT_QUOTES);?>" id = "contentText{{$news->id}}"/>
+
+			  			
 			  		</td>
 			  		
 			  	</tr>
@@ -106,8 +108,14 @@
 			  			<div class="col-sm-10" id= "content{{$news->id}}">
 			  				
 			  			</div>
+			  			
 			  		</td>
 			  		<!-- <td colspan="1"></td> -->
+			  	</tr>
+			  	<tr>
+			  		<td colspan="7" align="center">
+			  			<a class = "hidden" class="hideContentButton" href="javascript:void(0);" newsId = "{{$news->id}}" id = "hide{{$news->id}}" onclick = "hideContent(this);"><i class="fa fa-arrows-v" style="font-size:14px;color:#476b6b;"></i> Thu gọn nội dung</a>
+			  		</td>
 			  	</tr>
 		    	@endforeach
 		    </tbody>
@@ -115,14 +123,23 @@
 	  	{!! $newssList->render() !!}
 	</div>
 	<script type="text/javascript">
+		$(document).ready(function () {
+			$('.hideContentButton').addClass("hidden");
+		});
 		function showContent(object, newsId, newsContent) {
 			// alert($('#contentText' + newsId).attr('value'));
 			$('#content' + newsId).html($('#contentText' + newsId).attr('value'));
-			$(object).html("<i class='fa fa-arrows-v' style='font-size:14px;color:#476b6b;'></i> Thu gọn nội dung");
-			$(object).attr("onclick","hideContent(this, newsId);");
+			$('#show' + newsId).addClass("hidden");
+			$('#hide' + newsId).removeClass("hidden");
+			// $(object).html("<i class='fa fa-arrows-v' style='font-size:14px;color:#476b6b;'></i> Thu gọn nội dung");
+			// $(object).attr("onclick","hideContent(this);");
 		}
-		function hideContent(object, newsId) {
-			$('#content' + newsId)
+		function hideContent(object) {
+			var newsId = $(object).attr('newsId');
+			$('#content' + newsId).html("");
+			$('#show' + newsId).removeClass("hidden");
+			$('#hide' + newsId).addClass("hidden");
+
 		}
 		function changeActive(newsId, newsActive) {
 			var cnf,newActive;

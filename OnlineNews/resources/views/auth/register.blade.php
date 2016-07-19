@@ -53,7 +53,7 @@
         <!-- widget content -->
         <div class="widget-body no-padding">
             
-            <form class="smart-form" novalidate="novalidate" method="POST" action="/registerProcessing" id="registerForm">
+            <form class="smart-form" novalidate="novalidate" method="POST" action="/registerProcessing" id="registerForm" enctype="multipart/form-data">
                 {!! csrf_field() !!}
                 <header>
                     Vui lòng đăng ký
@@ -71,10 +71,9 @@
                 <fieldset>
                     <section>
                         <label class="input"> <i class="icon-append fa fa-user"></i>
-                            <input type="text" name="username" placeholder="Họ và tên">
+                            <input type="text" name="name" placeholder="Họ và tên">
                             <b class="tooltip tooltip-bottom-right">Vui lòng nhập tên</b> </label>
                     </section>
-                    
                     
                     
                     <section>
@@ -137,22 +136,8 @@
                             <div class="container">
                                 <div class="row">    
                                     <div class="col-xs-12 col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-1">  
+                                    <input type="file" accept="image/png, image/jpeg, image/gif" name="filefield"/>
                                         <!-- image-preview-filename input [CUT FROM HERE]-->
-                                        <div class="input-group image-preview">
-                                            <input type="text" class="form-control image-preview-filename" disabled="disabled"> <!-- don't give a name === doesn't send on POST/GET -->
-                                            <span class="input-group-btn">
-                                                <!-- image-preview-clear button -->
-                                                <button type="button" class="btn btn-default image-preview-clear" style="display:none;">
-                                                    <span class="glyphicon glyphicon-remove"></span> Xóa
-                                                </button>
-                                                <!-- image-preview-input -->
-                                                <div class="btn btn-default image-preview-input">
-                                                    <span class="glyphicon glyphicon-folder-open"></span>
-                                                    <span class="image-preview-input-title">Browse</span>
-                                                    <input type="file" accept="image/png, image/jpeg, image/gif" name="input-file-preview"/> <!-- rename it -->
-                                                </div>
-                                            </span>
-                                        </div><!-- /input-group image-preview [TO HERE]--> 
                                     </div>
                                 </div>
                             </div>

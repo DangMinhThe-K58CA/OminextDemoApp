@@ -29,6 +29,42 @@ app.controller("newsController", ['$scope', '$rootScope', 'appService',function(
 	}
 }]);
 
+
+app.controller("hottestBookmarkController", ['$scope', '$rootScope', 'appService',function($scope, $rootScope, appService) {
+	$scope.hottestList = [];
+	$scope.init = function() {
+		$.ajax({
+			url: "/general/getHottestBookmarkList",
+			type: "GET",
+			success: function(jsonData) {
+				//alert(jsonData);
+				$scope.hottestList = JSON.parse(jsonData);
+				for(var i = 0; i < $scope.hottestList.length; i ++) {
+					$scope.hottestList[i].order = i + 1;
+					$scope.hottestList[i].shortDescription = $scope.hottestList[i].shortDescription.slice(0,200) + " ...";
+				}
+				$scope.$applyAsync();
+			}
+		});
+	}
+	$scope.readNews = function (news) {
+		$.ajax({
+			url: 'general/readNewsInBookmark',
+			type: 'GET',
+			data: {newsId: news.id},
+			success: function (jsonData) {
+				if (jsonData != "0") {
+					$rootScope.$broadcast("passNewsFromCate", news);
+					$('#newsField').removeClass("hidden");
+					$('#newsOfCate').addClass("hidden");
+					$scope.$applyAsync();
+				}
+			}
+		});
+	}
+}]);
+
+
 app.controller("categoryController", ['$scope', '$rootScope', 'appService',function($scope, $rootScope, appService) {
 	$scope.catesData = {};
 	$scope.init = function () {

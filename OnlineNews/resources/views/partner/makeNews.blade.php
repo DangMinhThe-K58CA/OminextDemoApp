@@ -126,7 +126,7 @@
 						var token, title, cateId,description, content;
 			            token = $('input[name=_token]').val();
 			            title = $('#newsTitle').val();
-			            cateId = 1;
+			            cateId = $('#cateId').children(":selected").attr('value');
 			            description = $('#shortDescription').val();
 			            for ( instance in CKEDITOR.instances ) {
 				        	CKEDITOR.instances[instance].updateElement();

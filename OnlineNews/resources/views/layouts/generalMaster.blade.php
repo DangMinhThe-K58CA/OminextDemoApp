@@ -16,15 +16,15 @@ $img = DB::table('fileentries')->where('id', '=', Auth::user()->imageId)->get();
     <title>{{Auth::user()->name}}</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script type="text/javascript" src = "libs/jquery/jquery-2.0.2.min.js"></script>
-    <script type="text/javascript" src = "libs/jquery/jquery.validate.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="libs/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="libs/bootstrap/assets/css/font-awesome.css">
-    <script type="text/javascript" src = "libs/bootstrap/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="libs/bootstrap/css/smartadmin-production.css">
-    <script type="text/javascript" src = "libs/jquery/jquery-ui-1.10.3.min.js"></script>
-    <link rel="stylesheet" type="text/css" media="screen" href="plugins/css/smartadmin-skins.css">
-    <link rel="stylesheet" type="text/css" media="screen" href="plugins/css/demo.css">
+    <script type="text/javascript" src = {{ asset("libs/jquery/jquery-2.0.2.min.js") }}></script>
+    <script type="text/javascript" src = {{ asset("libs/jquery/jquery.validate.min.js") }}></script>
+    <link rel="stylesheet" type="text/css" href= {{ asset("libs/bootstrap/css/bootstrap.min.css") }}>
+    <link rel="stylesheet" type="text/css" href={{ asset("libs/bootstrap/assets/css/font-awesome.css") }}>
+    <script type="text/javascript" src = {{ asset("libs/bootstrap/js/bootstrap.min.js") }}></script>
+    <link rel="stylesheet" type="text/css" href= {{ asset("libs/bootstrap/css/smartadmin-production.css") }}>
+    <script type="text/javascript" src = {{ asset("libs/jquery/jquery-ui-1.10.3.min.js") }}></script>
+    <link rel="stylesheet" type="text/css" media="screen" href={{ asset("plugins/css/smartadmin-skins.css") }}>
+    <link rel="stylesheet" type="text/css" media="screen" href={{ asset("plugins/css/demo.css") }}>
     <style type="text/css">
         body {
             overflow-y: scroll;

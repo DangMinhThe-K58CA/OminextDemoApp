@@ -6,6 +6,14 @@ use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Input;
 
+use Illuminate\Support\Facades\Storage;
+
+use Illuminate\Support\Facades\File;
+
+use App\Fileentry;
+
+use Illuminate\Http\Response;
+
 use Auth;
 
 use Redirect;
@@ -19,6 +27,7 @@ use Illuminate\Foundation\Auth\User;
 use DB;
 
 use Hash;
+
 
 class ViewerController extends Controller
 {
@@ -52,7 +61,29 @@ class ViewerController extends Controller
 			$newAdmin = new User();
 			$newAdmin->name = $request->input('name');
 			$newAdmin->email = $request->input('email');
+			$newAdmin->gender = $request->input('gender');
 			$newAdmin->password = bcrypt($request->input('password'));
+			$newAdmin->sortDescription = $request->input('review');
+			$newAdmin->dateOfBirth = $request->input('dateOfBirth');
+			$newAdmin->hometown = $request->input('hometown');
+			$newAdmin->phone = $request->input('phone');
+			$newAdmin->hobbies = $request->input('hobbies');
+			//avatar here
+			if (Input::hasFile('filefield')) {
+				$file = Input::file('filefield');
+				$extension = $file->getClientOriginalExtension();
+				Storage::disk('s3')->put($file->getFilename().'.'.$extension,  File::get($file));
+				$entry = new Fileentry();
+				$entry->mime = $file->getClientMimeType();
+				$entry->original_filename = $file->getClientOriginalName();
+				$entry->filename = $file->getFilename().'.'.$extension;
+				$entry->save();
+			}
+			//end of avatar
+			$imageId = DB::table('fileentries')->max('id');
+			$newAdmin->hobbies = $request->input('hobbies');
+			$newAdmin->imageId = $imageId;
+
 			$counter = sizeof(DB::table('users')->where('email','=', $newAdmin->email)->get());
 			if ($counter != 0) {
 				$error = "Email account existed !!!";
@@ -62,14 +93,15 @@ class ViewerController extends Controller
 				return view('auth\register')->with($data);
 			}
 			else {
+				// echo $newAdmin->name;
+				// die();
 				$newAdmin->save();
 		    	if (Auth::attempt($userdata)) {
-
 			        // validation successful!
 			        // redirect them to the secure section or whatever
 			        // return Redirect::to('secure');
 			        // for now we'll just echo success (even though echoing in a controller is bad)
-			        return Redirect::to('/show');
+			        return Redirect::to('/');
 
 			    }
 			}

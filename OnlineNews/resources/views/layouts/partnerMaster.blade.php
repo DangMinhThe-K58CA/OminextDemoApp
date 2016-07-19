@@ -22,12 +22,12 @@ $img = DB::table('fileentries')->where('id', '=', Auth::user()->imageId)->get();
     <title>Cộng tác viên</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script type="text/javascript" src = "libs/jquery/jquery-2.0.2.min.js"></script>
-    <script type="text/javascript" src = "libs/jquery/jquery.validate.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="libs/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="libs/bootstrap/assets/css/font-awesome.css">
-    <script type="text/javascript" src = "libs/bootstrap/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="libs/bootstrap/css/smartadmin-production.css">
+    <script type="text/javascript" src = {{ asset('libs/jquery/jquery-2.0.2.min.js') }}></script>
+    <script type="text/javascript" src = {{ asset("libs/jquery/jquery.validate.min.js") }} ></script>
+    <link rel="stylesheet" type="text/css" href= {{ asset("libs/bootstrap/css/bootstrap.min.css") }}>
+    <link rel="stylesheet" type="text/css" href= {{ asset("libs/bootstrap/assets/css/font-awesome.css") }}>
+    <script type="text/javascript" src = {{ asset("libs/bootstrap/js/bootstrap.min.js") }}></script>
+    <link rel="stylesheet" type="text/css" href= {{ asset("libs/bootstrap/css/smartadmin-production.css") }}>
     <style type="text/css">
         body {
             overflow-y: scroll;
@@ -92,8 +92,8 @@ $img = DB::table('fileentries')->where('id', '=', Auth::user()->imageId)->get();
                                    <img class="img-circle" alt="Cinque Terre" src= "data:image/jpeg;base64,{{$imgData}}" width="40px" height="40px"><p style="color:white;">{{' '. Auth::user()->name . ' '}}</p><span class="caret"></span>
                                 </a>
                                 <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
-                                    <li><a href="#" onclick = "window.location.href = '/partnerProfile'"><i class="fa fa-info-circle" style="font-size:20px;color:green;"></i>   Thông tin</a></li>
-                                    <li><a href="#" onclick = "window.location.href = '/partnerLogout'"><i class="fa fa-sign-out" style="font-size:20px;color:red;"></i>   Đăng xuất</a></li>
+                                    <li><a href="#" onclick = "loadSite('/partnerProfile')"><i class="fa fa-info-circle" style="font-size:20px;color:green;"></i>   Thông tin</a></li>
+                                    <li><a href="#" onclick = "loadSite('/partnerLogout')"><i class="fa fa-sign-out" style="font-size:20px;color:red;"></i>   Đăng xuất</a></li>
                                     <li class="divider"></li>
                                 </ul>
                             </div>
@@ -110,14 +110,15 @@ $img = DB::table('fileentries')->where('id', '=', Auth::user()->imageId)->get();
                     <a id="dLabel" role="button" data-toggle="dropdown" class="btn btn-success" data-target="#" href="/page.html" style="font-size:120%;">----  Chọn tác vụ  ----<span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
-                        <li><a href="#" onclick="window.location.href = 'showNewsListOfPartner'">Danh sách bài đăng</a></li>
-                        <li><a href="#" onclick="window.location.href = 'makeNews'">Đăng bài</a></li>
+                        <li><a href="#" onclick="loadSite('/showNewsListOfPartner')">Danh sách bài đăng</a></li>
+                        <li><a href="#" onclick="loadSite('/makeNews')">Đăng bài</a></li>
                         <li class="divider"></li>
                     </ul>
                 </div>
             </div>
         @show
-        <div class="col-sm-10 col-sm-offset-right-0 container">
+        <div class="col-sm-12 col-sm-offset-right-0 container">
+            <br/>
             @yield('content')
         </div>
 
@@ -127,5 +128,10 @@ $img = DB::table('fileentries')->where('id', '=', Auth::user()->imageId)->get();
             </div> -->
         @show
     </div>
+    <script type="text/javascript">
+        function loadSite(site) {
+            window.location.href = document.location.origin + site;
+        }
+    </script>
 </body>
 </html>

@@ -46,7 +46,111 @@ class PartnerController extends Controller
 					return 0;
 				}
 	}
+	public function editNews($newsId = 0) {
+		if (Auth::check()) {
+			$news = DB::table('newss')->where('id', '=', $newsId)->get();
+			if (Auth::user()->id != $news[0]->authId) {
+				return Redirect::to('/cong-tac-vien');
+			}
+			else {
+				if (sizeof($news) != 0) {
+					//var_dump($news);
+					return view('partner/editNews', ['news' => $news[0]]);
+				}
+				else {
+					return Redirect::to('/');
+				}
+			}
+		}
+		else {
+			return Redirect::to('/');
+		}
+	}
+	public function completeEditingNews(Request $request) {
+		if ($this->checkRole()) {
+			// $newsId = $request->input('newsId');
+			// $title = $request->input('newsTitle');
+			// $tmpList = DB::table('newss')->where('title','=', $title)->select('id')->get();
+			// if (sizeof($tmpList) == 1) {
+			if (1) {
+				// echo(sizeof($tmpList));
+				$newsId = $request->input('newsId');
+				$query = DB::table('newss')->where('id','=', $newsId)->get();
+				$curNews = $query[0];
+				$newsTitle = $request->input('newsTitle');
+				$cateId = $request->input('cateId');
+				$shortDescription = $request->input('shortDescription');
+				$content = $request->input('content');
 
+				if ($cateId != $curNews->cateId) {
+					DB::table('newss')->where('id', '=', $newsId)->update(['cateId' => $cateId]);
+				}
+				if ($newsTitle != $curNews->title) {
+					DB::table('newss')->where('id', '=', $newsId)->update(['title' => $newsTitle]);
+				}
+				if ($shortDescription != $curNews->shortDescription) {
+					DB::table('newss')->where('id', '=', $newsId)->update(['shortDescription' => $shortDescription]);
+				}
+				if ($content != $curNews->content) {
+					DB::table('newss')->where('id', '=', $newsId)->update(['content' => $content]);
+				}
+				//
+				$newId = $newsId;
+				$tmpContent = $content;
+				$firstImageTag = strpos($tmpContent, "<img");
+				//
+				$firstImgString = substr($tmpContent, $firstImageTag);
+				$firstImageEndTag = strpos($firstImgString, "/>");
+				$firstImgString = substr($firstImgString,0, $firstImageEndTag + 2);
+				//
+				$firstSrcTag = strpos($tmpContent, "src=");
+				//
+				$firstImgString = substr($tmpContent, $firstSrcTag + 5);
+				$firstSrcPp = strpos($firstImgString, "\"");
+				$firstImgString = substr($firstImgString, 0, $firstSrcPp);
+				//
+				$img = strrev($firstImgString);
+				$firstSignal = strpos($img, '/');
+				$img = strrev(substr($img, 0, $firstSignal));
+				//
+				DB::table('images')->insert([
+						'name' => $img
+					]);
+				DB::table('newsimages')->where('newsId', '=', $newsId)->delete();
+				$imageId = DB::table('images')->max('id');
+				DB::table('newsimages')->insert([
+						'newsId' => $newId,
+						'imageId' => $imageId
+					]);
+				echo 1;
+			} else {
+				echo "Tiêu đề trùng ! Vui lòng chọn tiêu đề khác.";
+			}
+			
+		} else {
+			return redirect('/');
+		}
+	}
+	public function deleteNews(Request $request) {
+		if (Auth::check()) {
+			$newsId = $request->input('newsId');
+			$deleted = DB::table('newss')->where('id', '=', $newsId)->delete();
+			echo $deleted;
+		}
+		else {
+			return Redirect::to('/');
+		}
+	}
+	public function newssListManage(Request $request) {
+		if ($this->checkRole()) {
+			$userId = Auth::user()->id;
+			$newssList = DB::table('newss')->join('users', 'newss.authId', '=', 'users.id')->join('categories', 'newss.cateId', '=', 'categories.id')->where('authId', '=', $userId)->select('newss.*', 'users.name', 'users.email', 'categories.name as cateName')->orderBy('active', 'asc')->orderBy('created_at', 'desc')->paginate(6);
+			return view('partner/newsList', ['newssList' => $newssList]);
+		}
+		else {
+			return Redirect::to('/');
+		}
+	}
 	public function saveNewsContent(Request $request) {
 		if ($this->checkRole()) {
 			$title = $request->input('newsTitle');
